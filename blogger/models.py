@@ -15,7 +15,7 @@ class Category(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return "/categories/%s/" % self.slug
+        return reverse('blogger:getCategory', args=[self.slug])
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
