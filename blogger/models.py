@@ -23,7 +23,8 @@ class Post(models.Model):
     text = models.TextField()
     slug = models.SlugField(max_length=40, unique=True)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
-    categories = models.ManyToManyField(Category, blank=True, null=True, through='CategoryToPost')
+    categories = models.ManyToManyField(Category, blank=True, through='CategoryToPost')
+    post_picture = models.URLField(blank=True, null=True)
 
     class Meta:
         ordering = ["-pub_date"]

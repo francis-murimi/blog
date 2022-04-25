@@ -12,11 +12,11 @@ sitemaps = {
 }
 urlpatterns = [
     path('',views.homePage, name='homePage'),
-    path('blog/<slug>/',views.getPost, name='getPost'),
+    path('post/<slug>/',views.getPost, name='getPost'),
     #path('blogs/',views.getList,name='getList' ),
-    path('blogs/',views.PostList.as_view(), name= 'PostList'),
+    path('posts/',views.PostList.as_view(), name= 'PostList'),
     # Categories
-    path('categories/', ListView.as_view(model=Category,)),
+    path('categories/', CategoryListView.as_view(), name='CategoryListView'),
     path('categories/<categorySlug>/',views.getCategory,name='getCategory'),
     path('categories/<categorySlug>/<selected_page>/',views.getCategory, name='getCategory'),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
