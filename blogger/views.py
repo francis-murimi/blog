@@ -5,11 +5,17 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 #from django.views.generic.list import ListView
 from django.views.generic import ListView
 
-class HomePage(ListView):
+def homePage(request):
+    blogs = Post.objects.all()
+    context = {'blogs':blogs}
+    template = loader.get_template('blogger/list.html')
+    return HttpResponse(template.render(context,request))
+
+class PostList(ListView):
     model = Post
     template_name = 'blogger/list.html'  # Default: <app_label>/<model_name>_list.html
     context_object_name = 'blogs'  # Default: object_list
-    paginate_by = 4
+    paginate_by = 3
     queryset = Post.objects.all()  # Default: Model.objects.all()
 
 def getList(request):
@@ -35,7 +41,7 @@ def getCategory(request, categorySlug,):
     category = Category.objects.get(slug = categorySlug)
     posts = Post.objects.filter(categories=category).order_by('-pub_date')
     page = request.GET.get('page', 1)
-    paginator = Paginator(posts, 4)
+    paginator = Paginator(posts, 2) 
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
