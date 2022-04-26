@@ -1,4 +1,15 @@
-<div> 
-    <h2>{{post.title}} </h2>
-    {{post.text}}
+{% extends "blogger/dbase.html" %}
+{% block title %}
+{{post.title}}
+{% endblock %}
+{% block content %}
+<div class="content">
+    <div>
+        <h2 class="headline">{{post.title}}</h2>
+        <div>
+            {{ post.text|safe}}
+        </div>
+    </div>
 </div>
+{% endblock %}
+
