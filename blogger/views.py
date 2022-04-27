@@ -8,7 +8,7 @@ from django.views.generic import ListView
 def homePage(request):
     blogs = Post.objects.all()
     context = {'blogs':blogs}
-    template = loader.get_template('blogger/home.html')
+    template = loader.get_template('blogger/home2.html')
     return HttpResponse(template.render(context,request))
 
 class PostList(ListView):
