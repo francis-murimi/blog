@@ -1,5 +1,5 @@
 from django.template import loader
-from blogger.models import Post, Category
+from blogger.models import Post, Category,Solutions
 from django.http import HttpResponse, Http404,HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 #from django.views.generic.list import ListView
@@ -7,7 +7,9 @@ from django.views.generic import ListView
 
 def homePage(request):
     blogs = Post.objects.all()
-    context = {'blogs':blogs}
+    products = Solutions.objects.all()
+    context = {'blogs':blogs,
+                'products':products}
     template = loader.get_template('blogger/home2.html')
     return HttpResponse(template.render(context,request))
 

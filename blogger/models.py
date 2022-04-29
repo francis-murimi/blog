@@ -38,3 +38,15 @@ class Post(models.Model):
 class CategoryToPost(models.Model):
     post = models.ForeignKey(Post, on_delete= models.CASCADE)
     category = models.ForeignKey(Category, on_delete= models.CASCADE)
+
+class Solutions(models.Model):
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    image_url = models.URLField()
+    action_form = models.TextField(blank= True)
+    
+    def __str__(self):
+        return self.title
+    
+    def get_absolute_url(self):
+        return reverse('blogger:getSolution',args=[self.slug])

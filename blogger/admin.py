@@ -1,4 +1,4 @@
-from blogger.models import Category, CategoryToPost, Post
+from blogger.models import Category, CategoryToPost, Post,Solutions
 from django.contrib import admin
 from django.contrib.auth.models import User
 
@@ -18,5 +18,10 @@ class PostAdmin(admin.ModelAdmin):
         obj.author = request.user
         obj.save()
 
+class SolutionsAdmin(admin.ModelAdmin):
+    model = Solutions
+    #exclude = ['text','image_url','action_form']
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Solutions,SolutionsAdmin)
