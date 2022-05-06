@@ -10,7 +10,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">{{ category.title }}</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <p class="card-text">{{ category.description|safe }}</p>
                     <a href="{{ category.get_absolute_url }}" class="btn btn-primary">View Posts</a>
                 </div>
             </div>
