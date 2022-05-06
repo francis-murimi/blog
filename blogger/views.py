@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 
 def homePage(request):
-    blogs = Post.objects.all()
+    blogs = Post.objects.filter(status= 1)[:3]
     products = Solutions.objects.all()
     context = {'blogs':blogs,
                 'products':products}
@@ -18,7 +18,7 @@ class PostList(ListView):
     template_name = 'blogger/list.html'  # Default: <app_label>/<model_name>_list.html
     context_object_name = 'blogs'  # Default: object_list
     paginate_by = 4 # Number of posts per page
-    queryset = Post.objects.all()  # Default: Model.objects.all()
+    queryset = Post.objects.filter(status= 1)  # Default: Model.objects.all()
 
 """
 def getList(request):

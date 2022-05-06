@@ -18,13 +18,19 @@ class Category(models.Model):
         return reverse('blogger:getCategory', args=[self.slug])
 
 class Post(models.Model):
+    STATUS = (
+        (0,"Draft"),
+        (1,"Published")
+        )
     title = models.CharField(max_length=200)
-    pub_date = models.DateTimeField()
+    pub_date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     slug = models.SlugField(max_length=40, unique=True)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     categories = models.ManyToManyField(Category, blank=True, through='CategoryToPost')
     post_picture = models.URLField(blank=True, null=True) #image
+    status = models.IntegerField(choices=STATUS, default=0)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-pub_date"]

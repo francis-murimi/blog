@@ -10,6 +10,9 @@ class CategoryToPostInline(admin.TabularInline):
     extra = 1
 
 class PostAdmin(admin.ModelAdmin):
+    list_display = ['title','status','pub_date', 'updated']
+    list_filter = ['status','pub_date', 'updated']
+    list_editable = ['status',]
     prepopulated_fields = {"slug": ("title",)}
     exclude = ('author',)
     inlines = [CategoryToPostInline]
