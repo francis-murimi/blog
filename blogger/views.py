@@ -20,13 +20,6 @@ class PostList(ListView):
     paginate_by = 4 # Number of posts per page
     queryset = Post.objects.filter(status= 1)  # Default: Model.objects.all()
 
-"""
-def getList(request):
-    blogs = Post.objects.all()
-    context = {'blogs':blogs}
-    template = loader.get_template('blogger/list.html')
-    return HttpResponse(template.render(context,request))
-    """
 
 def getPost(request, slug):
     # Get specified post
@@ -38,6 +31,7 @@ def getPost(request, slug):
 class CategoryListView(ListView):
     model = Category
     queryset = Category.objects.all()
+    paginate_by = 4
     context_object_name = 'category_list'
     template_name = 'blogger/category_list.html'
 
