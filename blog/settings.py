@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
-    'blogger'
+    'widget_tweaks',
+    'blogger',
+    'profiles',
 ]
 
 MIDDLEWARE = [
