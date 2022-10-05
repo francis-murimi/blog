@@ -1,4 +1,4 @@
-from blogger.models import Category, CategoryToPost, Post
+from blogger.models import Category, CategoryToPost, Post,Solutions,Comment
 from django.contrib import admin
 from django.contrib.auth.models import User
 
@@ -10,6 +10,9 @@ class CategoryToPostInline(admin.TabularInline):
     extra = 1
 
 class PostAdmin(admin.ModelAdmin):
+    list_display = ['title','status','pub_date', 'updated']
+    list_filter = ['status','pub_date', 'updated']
+    list_editable = ['status',]
     prepopulated_fields = {"slug": ("title",)}
     exclude = ('author',)
     inlines = [CategoryToPostInline]
@@ -18,5 +21,15 @@ class PostAdmin(admin.ModelAdmin):
         obj.author = request.user
         obj.save()
 
+class SolutionsAdmin(admin.ModelAdmin):
+    model = Solutions
+    #exclude = ['text','image_url','action_form']
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['name','post']
+    list_filter = ['post']
+    
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Solutions,SolutionsAdmin)
+admin.site.register(Comment,CommentAdmin)

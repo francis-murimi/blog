@@ -5,10 +5,95 @@
 {% block content %}
 <div class="content">
     <div>
-        <h2 class="headline">{{post.title}}</h2>
+        <h2 class="headline">{{post.title}}</h2> <br>
+        <div style="margin-bottom: 30px;">
+            {% for category in categories %}
+            <a href="{{ category.get_category_url }}" class="btn btn-secondary">{{category}}</a>
+            {% endfor %}
+        </div>
         <div>
             {{ post.text|safe}}
         </div>
+    </div>
+    {% if user.is_authenticated %}
+        <div style="margin-top: 70px;">
+            {% if new_comment %}
+                <div class="alert alert-success" role="alert">
+                Your comment has been updated.
+                </div>
+                {% else %}
+                <h3>Post a comment</h3>
+                {% load widget_tweaks %}
+                <div>
+                    <form method="post" style="margin-top: 0.5em;" action="." id="myCommentForm">
+                        {% csrf_token %}
+                        {% for hidden_field in form.hidden_fields %}
+                            {{ hidden_field }}
+                        {% endfor %}
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+            
+                        {% for field in form.visible_fields %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {% if form.is_bound %}
+                                {% if field.errors %}
+                                    {% render_field field class="form-control is-invalid" %}
+                                        {% for error in field.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ error }}
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                    {% render_field field class="form-control is-valid" %}
+                                    {% endif %}
+                                    {% else %}
+                                    {% render_field field class="form-control" %}
+                                {% endif %}
+                            {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Post</button>
+                    </form>
+                </div>
+                {% endif %}
+        </div>
+        {% else %}
+            <div>
+                <hr>
+                <h4>
+                    <a class="btn btn-info" href="{% url 'profiles:log_in' %}">Log in </a>&nbsp&nbsp&nbsp
+                    <a class="btn btn-primary" href="{% url 'profiles:user_register' %}">Register</a> <br>
+                    to post comment 
+                </h4>
+                <hr>
+            </div>
+        {% endif %}
+    <div style="margin-top: 20px; margin-bottom: 70px;">
+        <span style="color: rgb(143, 40, 40);">{{ comments.count }} comments</span> <br>
+        {% if comments %}
+        {% for comment in comments %}
+            <div class="comments" style="padding: 1px;">
+            <div class="font-weight-bold">
+                {{ comment.name }}
+                <span class=" text-muted font-weight-normal">{{ comment.created_on }}</span> <br>
+                {{ comment.text | linebreaks }}
+                <hr>
+            </div>
+            
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>Comment on this post.</p>
+            {% endif %}
+            
     </div>
 </div>
 {% endblock %}

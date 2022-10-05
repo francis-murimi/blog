@@ -4,18 +4,43 @@
 {% endblock %}
 {% block content %}
 <div>
-    <div class="row">
-        {% for category in category_list %}
-        <div class="col-sm-6" style="margin-bottom: 5px;">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ category.title }}</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="{{ category.get_absolute_url }}" class="btn btn-primary">View Posts</a>
+        <div class="row">
+                {% for category in category_list %}
+                <div class="col-sm-6" style="margin-bottom: 5px;">
+                <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title">{{ category.title }}</h5>
+                        <p class="card-text">{{ category.description|safe }}</p>
+                        <a href="{{ category.get_category_url }}" class="btn btn-primary">View Posts</a>
+                        </div>
                 </div>
-            </div>
+                </div>
+                {% endfor %}
         </div>
+        <!-- Pagination -->
+        <div>
+        {% if is_paginated %}
+                <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                                <li class="btn btn-light" style="margin: 7px;"><a href="?page={{ page_obj.previous_page_number }}" style="text-decoration: none;">&laquo;</a></li>
+                        {% else %}
+                                <li class="disabled btn btn-danger" style="margin: 7px;"><span>&laquo;</span></li>
+                        {% endif %}
+        {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                        <li class="active btn btn-primary" style="margin: 7px;"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                        <li class="btn btn-secondary" style="margin: 7px;"><a href="?page={{ i }}" style="text-decoration: none; color: white; font-weight: 700;">{{ i }} &nbsp;&nbsp;</a></li>
+                {% endif %}
         {% endfor %}
-    </div>
+        {% if page_obj.has_next %}
+                <li class="btn btn-light" style="margin: 7px;"><a href="?page={{ page_obj.next_page_number }}" style="text-decoration: none;">&raquo;</a></li>
+        {% else %}
+                <li class="disabled btn btn-danger" style="margin: 7px;"><span>&raquo;</span></li>
+        {% endif %}
+                </ul>
+        {% endif %}
+        </div>
+        <!-- End of Pagination -->
 </div>
 {% endblock %}
