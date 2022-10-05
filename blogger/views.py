@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import render,redirect
-from blogger.models import Post, Category,Solutions, Comment
+from blogger.models import CategoryToPost, Post, Category,Solutions, Comment
 from django.http import HttpResponse, Http404,HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 #from django.views.generic.list import ListView
@@ -13,7 +13,7 @@ def homePage(request):
     products = Solutions.objects.all()
     context = {'blogs':blogs,
                 'products':products}
-    template = loader.get_template('blogger/home2.html')
+    template = loader.get_template('blogger/home.html')
     return HttpResponse(template.render(context,request))
 
 class PostList(ListView):
@@ -27,6 +27,7 @@ class PostList(ListView):
 def getPost(request, slug):
     # Get specified post
     post = Post.objects.get(slug=slug)
+    categories = CategoryToPost.objects.filter(post=post)
     #comments
     comments = Comment.objects.filter(post= post)
     new_comment = None
@@ -44,14 +45,14 @@ def getPost(request, slug):
             return HttpResponseRedirect(request.path_info)
     else:
         form = CommentForm()
-    context = {'post':post, 'form':form, 'comments':comments,}
+    context = {'post':post, 'form':form, 'comments':comments,'categories':categories}
     template = loader.get_template('blogger/detail.html')
     return HttpResponse(template.render(context,request))
 
 class CategoryListView(ListView):
     model = Category
     queryset = Category.objects.all()
-    paginate_by = 4
+    paginate_by = 5
     context_object_name = 'category_list'
     template_name = 'blogger/category_list.html'
 
@@ -59,7 +60,7 @@ def getCategory(request, categorySlug,):
     category = Category.objects.get(slug = categorySlug)
     posts = Post.objects.filter(categories=category).order_by('-pub_date')
     page = request.GET.get('page', 1)
-    paginator = Paginator(posts, 2) # Number of posts per page
+    paginator = Paginator(posts, 4) # Number of posts per page
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:

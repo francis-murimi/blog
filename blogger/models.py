@@ -20,7 +20,7 @@ class Category(models.Model):
         self.slug = slugify(self.title)
         super(Category, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
+    def get_category_url(self):
         return reverse('blogger:getCategory', args=[self.slug])
 
 class Post(models.Model):
@@ -56,6 +56,10 @@ class Post(models.Model):
 class CategoryToPost(models.Model):
     post = models.ForeignKey(Post, on_delete= models.CASCADE)
     category = models.ForeignKey(Category, on_delete= models.CASCADE)
+    def __str__(self):
+        return self.category.title
+    def get_category_url(self):
+        return reverse('blogger:getCategory', args=[self.category.slug])
 
 class Solutions(models.Model):
     title = models.CharField(max_length=100)
