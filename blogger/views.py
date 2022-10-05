@@ -1,9 +1,12 @@
+from django.http import HttpResponseRedirect
 from django.template import loader
-from blogger.models import Post, Category,Solutions
+from django.shortcuts import render,redirect
+from blogger.models import Post, Category,Solutions, Comment
 from django.http import HttpResponse, Http404,HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 #from django.views.generic.list import ListView
 from django.views.generic import ListView
+from .forms import CommentForm
 
 def homePage(request):
     blogs = Post.objects.filter(status= 1)[:3]
@@ -24,7 +27,24 @@ class PostList(ListView):
 def getPost(request, slug):
     # Get specified post
     post = Post.objects.get(slug=slug)
-    context = {'post':post,}
+    #comments
+    comments = Comment.objects.filter(post= post)
+    new_comment = None
+    # Comment posted
+    if request.method == 'POST': 
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            # Create Comment object but don't save to database yet
+            new_comment = form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post = post
+            new_comment.name = request.user
+            # Save the comment to the database
+            new_comment.save()
+            return HttpResponseRedirect(request.path_info)
+    else:
+        form = CommentForm()
+    context = {'post':post, 'form':form, 'comments':comments,}
     template = loader.get_template('blogger/detail.html')
     return HttpResponse(template.render(context,request))
 

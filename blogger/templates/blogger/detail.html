@@ -10,6 +10,74 @@
             {{ post.text|safe}}
         </div>
     </div>
+    <div style="margin-top: 70px;">
+        {% if new_comment %}
+            <div class="alert alert-success" role="alert">
+            Your comment has been updated.
+            </div>
+            {% else %}
+            <h3>Post a comment</h3>
+            {% load widget_tweaks %}
+            <div>
+                <form method="post" style="margin-top: 0.5em;" action="." id="myCommentForm">
+                    {% csrf_token %}
+                    {% for hidden_field in form.hidden_fields %}
+                        {{ hidden_field }}
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+        
+                    {% for field in form.visible_fields %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {% if form.is_bound %}
+                            {% if field.errors %}
+                                {% render_field field class="form-control is-invalid" %}
+                                    {% for error in field.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                {% render_field field class="form-control is-valid" %}
+                                {% endif %}
+                                {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Post</button>
+                </form>
+            </div>
+            {% endif %}
+    </div>
+    <div style="margin-top: 20px; margin-bottom: 70px;">
+        <span style="color: rgb(143, 40, 40);">{{ comments.count }} comments</span> <br>
+        {% if comments %}
+        {% for comment in comments %}
+            <div class="comments" style="padding: 1px;">
+            <div class="font-weight-bold">
+                {{ comment.name }}
+                <span class=" text-muted font-weight-normal">{{ comment.created_on }}</span> <br>
+                {{ comment.text | linebreaks }}
+                <hr>
+            </div>
+            
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>Comment on this post.</p>
+            {% endif %}
+            
+    </div>
 </div>
 {% endblock %}
 
