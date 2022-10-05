@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils.text import slugify
 
 # Create your models here.
 class Category(models.Model):
@@ -9,10 +10,15 @@ class Category(models.Model):
     description = models.TextField()
 
     class Meta:
-        verbose_name_plural = "Categories"
+        verbose_name_plural = "Topics"
+        verbose_name = 'Topic'
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Category, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('blogger:getCategory', args=[self.slug])
@@ -34,9 +40,15 @@ class Post(models.Model):
 
     class Meta:
         ordering = ["-pub_date"]
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Post, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('blogger:getPost',args=[self.slug])
@@ -51,6 +63,10 @@ class Solutions(models.Model):
     image_url = models.URLField()
     action_form = models.TextField(blank= True)
     
+    class Meta:
+        verbose_name = 'Solution'
+        verbose_name_plural = 'Solutions'
+        
     def __str__(self):
         return self.title
     
@@ -62,7 +78,11 @@ class Comment(models.Model):
     name = models.ForeignKey(User,on_delete=models.CASCADE)
     text = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
+    
     class Meta:
         ordering = ['-created_on']
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+        
     def __str__(self):
-        return 'Comment {} by {}'.format(self.text, self.name)
+        return 'Comment text: {} by {}'.format(self.text, self.name)
